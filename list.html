@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Agencies List</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/9151/9151185.png">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="list.html">Agencies</a>
+        <a href="map.html">Map</a>
+    </div>
+
+    <div class="container">
+        <h1>Agencies in St. Catharines</h1>
+
+        <div id="buttons">
+            <button class="category-btn" onclick="filterCategory('All')">All</button>
+            <button class="category-btn" onclick="filterCategory('Shelter')">Shelter</button>
+            <button class="category-btn" onclick="filterCategory('Support')">Support</button>
+            <button class="category-btn" onclick="filterCategory('Food Bank')">Food Bank</button>
+            <button class="category-btn" onclick="filterCategory('Shower')">Shower</button>
+        </div>
+
+        <div id="agencies-container"></div>
+    </div>
+
+<script>
+const agencies = [
+    {name:"Salvation Army Booth Centre (Men)", category:"Shelter", address:"184 Church St", img:"https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2021/11/2021-Postmedia-sponsored-content-Centre-Booth.jpg"},
+    {name:"Southridge Shelter (Co-Ed)", category:"Shelter", address:"201 Glenridge Ave", img:"https://img.p.mapq.st/?url=https://s3-media2.fl.yelpcdn.com/bphoto/HytfYUrvKHLfYUGuYhlLuw/l.jpg?w=3840&q=75"},
+    {name:"Summer Street Shelter (Co-Ed and couples)", category:"Shelter", address:"5925 Summer St", img:"https://bloximages.chicago2.vip.townnews.com/niagarafallsreview.ca/content/tncms/assets/v3/editorial/1/9f/19f8335b-c312-5a9b-9367-74c0fb7c0771/678ade061b442.image.jpg?crop=1206%2C633%2C90%2C414&resize=1200%2C630&order=crop%2Cresize"},
+    {name:"The RAFT (age 16-24)", category:"Shelter", address:"17 Centre St", img:"https://i.ytimg.com/vi/XQ3qlyjlLs0/maxresdefault.jpg"},
+    {name:"YWCA Women", category:"Shelter", address:"6135 Culp St/183 King St", img:"https://images.squarespace-cdn.com/content/v1/633b37a5482c2d409718702a/3f010f27-c860-444a-9971-68db3a957539/King.png"},
+    {name:"YWCA Family", category:"Shelter", address:"176 Oakdale Ave", img:"https://images.squarespace-cdn.com/content/v1/633b37a5482c2d409718702a/02c2e23b-c4ea-4282-90fa-4da2a5a1629c/Josh_Bellingham_Photography_YWCA_Quartek-4-scaled-e1651851949405+%281%29.jpeg"},
+
+    {name:"The Salvation Army", category:"Support", address:"350 Scott St", img:"https://scontent-yyz1-1.xx.fbcdn.net/v/t39.30808-6/327572589_737946997899775_4659844149465516227_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=E0yPiQheT0gQ7kNvwFIewah&_nc_oc=AdkL5OR3pqcoKsAlRwCGcNsH0e5MC9UP_p8euEssOwt_N0elkf_YR8rRH1WY30nNQho&_nc_zt=23&_nc_ht=scontent-yyz1-1.xx&_nc_gid=ghveZA7uWFLhTSmsDOkQzw&oh=00_AfYA7R_dcsL-cCzJjIvhpBpLmDFPo2OOsn385CPncgHOtg&oe=68DFC618"},
+    {name:"YWCA", category:"Support", address:"183 King St", img:"https://scontent-yyz1-1.xx.fbcdn.net/v/t39.30808-6/347591251_3499813103627272_3097225367941425115_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=lO9iHraRZe4Q7kNvwH08bw5&_nc_oc=AdlUtm3qVcazP9xi3_yq4mu-HnI8iQcL1rYG86toX_-aOzi_JOndejpy5znPsX1K0A0&_nc_zt=23&_nc_ht=scontent-yyz1-1.xx&_nc_gid=_fvSuglOMmjxD4s0gFT8hg&oh=00_AfYgQ_zdh8sXe1uapYTMMjKdzlgtjAZD5lj2W5fj_46mHg&oe=68DFB8ED"},
+    {name:"Southridge Community Church and Shelter", category:"Support", address:"201 Glenridge Ave", img:"https://scontent-yyz1-1.xx.fbcdn.net/v/t39.30808-6/359804137_607746951483898_5788736371658778571_n.png?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=NXHTUSyZDoYQ7kNvwFH9HQ4&_nc_oc=AdmAj8y2a3YkrE8O8rN6SMco7SLMGKrML1lFjb7Tywo8u2xx20TC74rbVvR4kkXvDCA&_nc_zt=23&_nc_ht=scontent-yyz1-1.xx&_nc_gid=2E3kE49-Czi124V_Ww2fhA&oh=00_AfbvcI4lbzsBVWGfJVnm6gqvsL8rVWIX_5v0vQVqSjrjRQ&oe=68DFB46F"},
+    {name:"RAFT", category:"Support", address:"17 Centre St", img:"https://scontent-yyz1-1.xx.fbcdn.net/v/t39.30808-6/321607294_472596458399073_4017988137497220501_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=Do1J3cg6gO4Q7kNvwFImVub&_nc_oc=AdlUQtd_qMKBaUykGsgrxNVtAfuVbVOgo_N5vQhmKPjFQoiMNfuoUsItnP0R3Zs6YdU&_nc_zt=23&_nc_ht=scontent-yyz1-1.xx&_nc_gid=RABfvc8VinEiCMwDBB6Rig&oh=00_Afax5MRH6-eMuP5bqx9mVv5H8oHrDQUsVMNfbyZsbZEsxg&oe=68DFBC19"},
+    {name:"CASON", category:"Support", address:"401-60 James St", img:"https://cdn-ch-prod-bqhwa0ewbpg6eyc2.z01.azurefd.net/prod-img-cache/CDN-ik-images/charityprofile/0/7489/cason.png"},
+    {name:"Positive Living Niagara", category:"Support", address:"120 Queenston St", img:"https://pbs.twimg.com/profile_images/522787903525502976/0vyvDczp_400x400.jpeg"},
+    {name:"Start Me Up Niagara", category:"Support", address:"203 Church St", img:"https://d2l4d0j7rmjb0n.cloudfront.net/site/2015/seo/logo.png"},
+
+    {name:"Community Care", category:"Food Bank", address:"12 North St / 19 Albert St W", img:"https://communitycarestca.ca/wp-content/uploads/2023/05/IMG_3107-scaled.jpg"},
+    {name:"Food Bank", category:"Food Bank", address:"400 Niagara St", img:"https://bloximages.chicago2.vip.townnews.com/stcatharinesstandard.ca/content/tncms/assets/v3/editorial/0/af/0af6051d-2e74-5e10-a829-99249f192622/67819277b399f.image.jpg?resize=745%2C500"},
+    {name:"Ozanam Center", category:"Food Bank", address:"235 Church St", img:"https://bloximages.chicago2.vip.townnews.com/niagarathisweek.com/content/tncms/assets/v3/editorial/0/a4/0a4c2133-3739-5198-a18a-574ef1a858be/63d1ac3628ac5.image.jpg?resize=833%2C500"},
+    {name:"Lincoln County Community Fridge", category:"Food Bank", address:"60 Fourth Ave", img:"https://bloximages.chicago2.vip.townnews.com/stcatharinesstandard.ca/content/tncms/assets/v3/editorial/6/c6/6c633e68-4b7d-5544-a7d2-7f37f9a53786/63d9f2cb83c9f.image.jpg?resize=759%2C500"},
+
+    {name:"Silver Spire United Church", category:"Shower", address:"366 St Paul St", img:"https://bloximages.chicago2.vip.townnews.com/stcatharinesstandard.ca/content/tncms/assets/v3/editorial/c/ae/cae6391b-dfc8-5cb7-8815-6bd3e5e8e7ea/63d9eab0a0562.image.jpg"}
+];
+
+function showAgencies(filtered) {
+    const container = document.getElementById('agencies-container');
+    container.innerHTML = '';
+    filtered.forEach(a => {
+        const div = document.createElement('div');
+        div.className = 'agency';
+        div.innerHTML = `<h3>${a.name}</h3>
+                         <p>${a.address}</p>
+                         <img src="${a.img}" alt="${a.name}">`;
+        container.appendChild(div);
+    });
+}
+
+function filterCategory(category) {
+    if(category === 'All'){
+        showAgencies(agencies);
+    } else {
+        showAgencies(agencies.filter(a => a.category === category));
+    }
+}
+
+showAgencies(agencies);
+</script>
+</body>
+</html>
